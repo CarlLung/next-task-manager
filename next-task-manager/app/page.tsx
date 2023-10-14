@@ -9,21 +9,23 @@ import { UpdateModal } from "../components/CrudComponents/UpdateModal";
 import { DetailsModal } from "../components/DisplayComponents/DetailsModal";
 import { GuideModal } from "@/components/DisplayComponents/GuideModal";
 import { createPortal } from "react-dom";
-
-const selectedFilter = (selectedTab: keyof typeof filterMap) =>
-  filterMap[selectedTab];
+import { useTasks } from "@/hooks/useTasks";
 
 const Home = () => {
   const [selectedTab, setSelectedTab] =
     useState<keyof typeof filterMap>("All Tasks");
-  const [allTasks, setAllTasks] = useState<Task[]>([]);
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [addModalShow, setAddModalShow] = useState(false);
   const [updateModalShow, setUpdateModalShow] = useState(false);
   const [detailsModalShow, setDetailsModalShow] = useState(false);
   const [guideModalShow, setGuideModalShow] = useState(false);
-
+  const {
+    allTasks,
+    setAllTasks,
+    filteredTasks,
+    setFilteredTasks,
+    selectedTask,
+    setSelectedTask,
+  } = useTasks({ selectedTab });
   const isDue = (task: Task) => {
     return new Date(task.assignedTime) < new Date();
   };
@@ -39,22 +41,6 @@ const Home = () => {
   const handleAllTasks = (taskslist: Task[]) => {
     setAllTasks(taskslist);
   };
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      const response = await fetch("http://localhost:8080/");
-      const data = await response.json();
-      const fetchedList = data.data.filter(
-        (task: Task) => task.completed !== true
-      );
-      setAllTasks(fetchedList);
-    };
-    fetchTasks();
-  }, []);
-
-  useEffect(() => {
-    setFilteredTasks(allTasks.filter(selectedFilter(selectedTab)));
-  }, [allTasks, selectedTab]);
 
   return (
     <>
