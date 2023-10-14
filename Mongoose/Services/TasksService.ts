@@ -32,7 +32,8 @@ export class TaskService {
       routine,
       areaOfFocus,
       alarm,
-      label,
+      note,
+      weekday,
     }: UpdateTaskPayload
   ) {
     const result = await TaskModel.findByIdAndUpdate(
@@ -45,7 +46,8 @@ export class TaskService {
           routine: routine,
           areaOfFocus: areaOfFocus,
           alarm: alarm,
-          label: label,
+          note: note,
+          weekday: weekday,
         },
       },
 
@@ -67,8 +69,8 @@ export class TaskService {
     routine,
     areaOfFocus,
     alarm,
-    archived,
-    label,
+    note,
+    weekday,
   }: ITask) {
     const result = await new TaskModel({
       _id,
@@ -80,8 +82,8 @@ export class TaskService {
       routine,
       areaOfFocus,
       alarm,
-      archived,
-      label,
+      note,
+      weekday,
     }).save();
     if (!result) {
       throw new Error("Error creating task");
